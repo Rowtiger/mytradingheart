@@ -2,7 +2,7 @@ import ccxt
 import pandas as pd
 import time
 import requests
-
+# टेलीग्राम टोकन और आईडी को सुरक्षित तरीके से यहाँ से उठाएं
 # सेटिंग्स
 TELEGRAM_TOKEN = '8799540972:AAHyxXfLq8CNti1Th83XX8X-l6mbcoEvrYo'
 CHAT_ID = '8781065824'
