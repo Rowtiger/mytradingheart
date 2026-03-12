@@ -2,16 +2,14 @@ import ccxt
 import pandas as pd
 import time
 import requests
-# टेलीग्राम टोकन और आईडी को सुरक्षित तरीके से यहाँ से उठाएं
-# सेटिंग्स
-TELEGRAM_TOKEN = '8799540972:AAHyxXfLq8CNti1Th83XX8X-l6mbcoEvrYo'
-CHAT_ID = '8781065824'
-SYMBOL = 'BTC/USDT'
-exchange = ccxt.binance()
+import os
 
-def send_telegram_msg(message):
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    requests.get(url, params={'chat_id': CHAT_ID, 'text': message})
+# Render या सर्वर के Environment Variables से टोकन उठाएं
+TOKEN = os.environ.get('TOKEN')
+CHAT_ID = os.environ.get('CHAT_ID')
+SYMBOL = 'BTC/USDT'
+
+exchange = ccxt.binance()
 
 def calculate_rsi(df, period=14):
     delta = df['close'].diff()
@@ -20,9 +18,13 @@ def calculate_rsi(df, period=14):
     rs = gain / loss
     return 100 - (100 / (1 + rs))
 
+def send_telegram_msg(message):
+    if TOKEN and CHAT_ID:
+        url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={CHAT_ID}&text={message}"
+        requests.get(url)
+
 print("Bot analysis shuru ho gaya hai...")
 
-# लूप को यहाँ से शुरू करें
 while True:
     try:
         bars = exchange.fetch_ohlcv(SYMBOL, timeframe='15m', limit=50)
@@ -46,5 +48,5 @@ while True:
         
     except Exception as e:
         print(f"Error: {e}")
-    
+        
     time.sleep(900) # 15 मिनट का इंतज़ार
